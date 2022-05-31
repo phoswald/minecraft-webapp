@@ -5,8 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegistrationRequest {
+public class RegistrationInfo {
 
+    private String id;
+    private String timestamp;
     private String email;
     private String name;
     private String userId;

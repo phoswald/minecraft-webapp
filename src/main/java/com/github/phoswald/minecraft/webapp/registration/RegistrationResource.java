@@ -32,9 +32,9 @@ public class RegistrationResource {
             @QueryParam("skip") Integer skip, //
             @QueryParam("limit") Integer limit) {
         try {
-            List<RegistrationRequest> response = repository.getRegistrations(skip, limit);
+            List<RegistrationInfo> response = repository.getRegistrations(skip, limit);
             logger.infov("Registrations found: count={0}", response.size());
-            return Response.ok(new GenericEntity<List<RegistrationRequest>>(response) { }).build();
+            return Response.ok(new GenericEntity<List<RegistrationInfo>>(response) { }).build();
         } catch (UncheckedIOException e) {
             logger.error("Registration search failed", e);
             GenericResponse response = new GenericResponse();
@@ -51,8 +51,8 @@ public class RegistrationResource {
             String id = repository.addRegistration(request);
             GenericResponse response = new GenericResponse();
             response.setMessage("Registration " + id + " created.");
-            logger.infov("Registration successful: email={0}, userid={1}, id={2}", request.getEmail(),
-                    request.getUserid(), id);
+            logger.infov("Registration successful: email={0}, userId={1}, id={2}", request.getEmail(),
+                    request.getUserId(), id);
             return Response.ok(response).build();
         } catch (UncheckedIOException e) {
             logger.error("Registration failed", e);
