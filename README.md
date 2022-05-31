@@ -23,6 +23,8 @@ $ docker run -it --rm --name myminecraft \
 ## URLs
 
 ~~~
+$ curl 'http://localhost:8080/app/rest/registration' -i
+
 $ curl 'http://localhost:8080/app/rest/registration' -i -X POST \
   -H 'content-type: application/json' \
   -d '{"email":"philip.oswald@gmail.com","name":"Philip Oswald","userid":"phoswald","comment":"nix\r\nda"}'
