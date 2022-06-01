@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Registration {
+class Registration {
 
     private String id;
     private String timestamp;
@@ -14,4 +14,16 @@ public class Registration {
     private String userId;
     private String school;
     private String comment;
+
+    void validate() {
+        requiresNonEmpty(email, "email");
+        requiresNonEmpty(name, "name");
+        requiresNonEmpty(userId, "userId");
+    }
+
+    private void requiresNonEmpty(String value, String name) {
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException("Field " + name + " must be set.");
+        }
+    }
 }

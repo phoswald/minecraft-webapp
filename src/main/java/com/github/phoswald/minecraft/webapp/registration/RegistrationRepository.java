@@ -51,6 +51,7 @@ class RegistrationRepository {
     }
 
     String createRegistration(Registration registration) {
+        registration.validate();
         var now = Instant.now();
         var id = registration.getEmail() + "@" + now.toEpochMilli();
         registration.setId(id);

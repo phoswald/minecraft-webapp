@@ -16,6 +16,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.jboss.logging.Logger;
 
@@ -39,7 +40,7 @@ public class RegistrationResource {
             return Response.ok(new GenericEntity<List<Registration>>(response) { }).build();
         } catch (UncheckedIOException e) {
             logger.error("Registration search failed: ", e);
-            return Response.serverError().build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -51,9 +52,12 @@ public class RegistrationResource {
             logger.infov("Registration created: email={0}, userId={1}, id={2}", request.getEmail(),
                     request.getUserId(), id);
             return Response.ok().build();
+        } catch (IllegalArgumentException e) {
+            logger.warnv("Registration creation failed: {0}", e.toString());
+            return Response.status(Status.BAD_REQUEST).build();
         } catch (UncheckedIOException e) {
             logger.error("Registration creation failed: ", e);
-            return Response.serverError().build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -66,7 +70,7 @@ public class RegistrationResource {
             return Response.ok().build();
         } catch (UncheckedIOException e) {
             logger.error("Registration deletion failed: ", e);
-            return Response.serverError().build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
