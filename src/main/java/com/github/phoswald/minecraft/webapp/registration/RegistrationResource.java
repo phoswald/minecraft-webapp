@@ -6,9 +6,11 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
@@ -28,37 +30,43 @@ public class RegistrationResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRegistrations(//
+    public Response findRegistrations(//
             @QueryParam("skip") Integer skip, //
             @QueryParam("limit") Integer limit) {
         try {
-            List<RegistrationInfo> response = repository.getRegistrations(skip, limit);
+            var response = repository.findRegistrations(skip, limit);
             logger.infov("Registrations found: count={0}", response.size());
-            return Response.ok(new GenericEntity<List<RegistrationInfo>>(response) { }).build();
+            return Response.ok(new GenericEntity<List<Registration>>(response) { }).build();
         } catch (UncheckedIOException e) {
-            logger.error("Registration search failed", e);
-            GenericResponse response = new GenericResponse();
-            response.setMessage("Error: " + e);
-            return Response.serverError().entity(response).build();
+            logger.error("Registration search failed: ", e);
+            return Response.serverError().build();
         }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addRegistration(RegistrationRequest request) {
+    public Response createRegistration(Registration request) {
         try {
-            String id = repository.addRegistration(request);
-            GenericResponse response = new GenericResponse();
-            response.setMessage("Registration " + id + " created.");
-            logger.infov("Registration successful: email={0}, userId={1}, id={2}", request.getEmail(),
+            var id = repository.createRegistration(request);
+            logger.infov("Registration created: email={0}, userId={1}, id={2}", request.getEmail(),
                     request.getUserId(), id);
-            return Response.ok(response).build();
+            return Response.ok().build();
         } catch (UncheckedIOException e) {
-            logger.error("Registration failed", e);
-            GenericResponse response = new GenericResponse();
-            response.setMessage("Error: " + e);
-            return Response.serverError().entity(response).build();
+            logger.error("Registration creation failed: ", e);
+            return Response.serverError().build();
+        }
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response deleteRegistration(@PathParam("id") String id) {
+        try {
+            repository.deleteRegistration(id);
+            logger.infov("Registration deleted: id={0}", id);
+            return Response.ok().build();
+        } catch (UncheckedIOException e) {
+            logger.error("Registration deletion failed: ", e);
+            return Response.serverError().build();
         }
     }
 }

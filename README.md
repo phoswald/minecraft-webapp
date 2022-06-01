@@ -28,4 +28,6 @@ $ curl 'http://localhost:8080/app/rest/registration' -i
 $ curl 'http://localhost:8080/app/rest/registration' -i -X POST \
   -H 'content-type: application/json' \
   -d '{"email":"philip.oswald@gmail.com","name":"Philip Oswald","userId":"phoswald","comment":"nix\r\nda"}'
+  
+$ curl 'http://localhost:8080/app/rest/registration/philip@example.com@1654109237990' -i -X DELETE
 ~~~
