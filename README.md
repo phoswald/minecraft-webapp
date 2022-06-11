@@ -1,33 +1,41 @@
-# minecraft-webapp
+# sample-jquery-mustache-spa
+
+Experiments with jQuery and Mustache (a Poor Man's SPA)
 
 ## Build and Run Standalone
 
 ~~~
 $ mvn clean verify
-$ export APP_REGISTRATION_DIRECTORY=$(pwd)/data
+$ export APP_TASK_DIRECTORY=$(pwd)/data
 $ java -jar target/quarkus-app/quarkus-run.jar
+~~~
+
+### Dev Mode
+
+~~~
+$ mvn quarkus:dev
 ~~~
 
 ## Build and Run in Docker
 
 ~~~
 $ mvn clean verify
-$ docker build -f src/main/docker/Dockerfile -t minecraft-webapp .
-$ docker run -it --rm --name myminecraft \
-  -e APP_REGISTRATION_DIRECTORY=/data \
+$ docker build -f src/main/docker/Dockerfile -t sample-jquery-mustache-spa .
+$ docker run -it --rm --name sample-jquery-mustache-spa \
+  -e APP_TASK_DIRECTORY=/data \
   -v $(pwd)/data:/data \
   -p 8080:8080 \
-  minecraft-webapp
+  sample-jquery-mustache-spa
 ~~~
 
 ## URLs
 
 ~~~
-$ curl 'http://localhost:8080/app/rest/registration' -i
+$ curl 'http://localhost:8080/app/rest/tasks' -i
 
-$ curl 'http://localhost:8080/app/rest/registration' -i -X POST \
+$ curl 'http://localhost:8080/app/rest/tasks' -i -X POST \
   -H 'content-type: application/json' \
-  -d '{"email":"philip.oswald@gmail.com","name":"Philip Oswald","userId":"phoswald","comment":"nix\r\nda"}'
+  -d '{"title":"Blubber..."}'
   
-$ curl 'http://localhost:8080/app/rest/registration/philip@example.com@1654109237990' -i -X DELETE
+$ curl 'http://localhost:8080/app/rest/tasks/e9788e65-3ceb-4592-8d61-d88d4c8e05f6' -i -X DELETE
 ~~~

@@ -1,4 +1,4 @@
-package com.github.phoswald.minecraft.webapp;
+package com.github.phoswald.sample;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

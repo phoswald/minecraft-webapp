@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>Tasks</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div class="container-fluid">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Tasks</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <p></p>
+      <h1>Tasks</h1>
+      <div class="alert alert-success" role="alert" id="registration-success-box" style="display: none">
+        Adding successful!
+      </div>
+      <div class="alert alert-danger" role="alert" id="registration-error-box" style="display: none">
+        Adding failed!
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <form id="form-registration">
+            <div class="mb-3">
+              <label for="titleInput" class="form-label">Title</label>
+              <input type="text" class="form-control" id="titleInput">
+            </div>
+            <div class="mb-3">
+              <label for="descriptionInput" class="form-label">Description</label>
+              <textarea class="form-control" id="descriptionInput" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <div class="form-group custom-control">
+                <input type="checkbox" class="custom-control-input" id="done" name="done" checked>
+                <label class="custom-control-label" for="done">Done</label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </form>
+        </div>
+      </div>
+      <script id="template-registrations" type="text/html">
+        <table class="table table-striped mt-4">
+          <tr>
+            <th>Done</th>
+            <th>Title</th>
+            <th>Updated</th>
+            <th></th>
+          </tr>
+          {{#.}}
+          <tr>
+            <td>{{ done }}</td>
+            <td>{{ title }}</td>
+            <td>{{ timestamp }}</td>
+            <td></td>
+          </tr>
+          {{/.}}
+        </table>
+      </script>
+      <div id="target-registrations"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="tasks.js"></script>
+  </body>
+</html>

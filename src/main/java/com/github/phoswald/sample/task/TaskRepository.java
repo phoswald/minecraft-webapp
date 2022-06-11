@@ -1,4 +1,4 @@
-package com.github.phoswald.minecraft.webapp.registration;
+package com.github.phoswald.sample.task;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -20,59 +20,59 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Dependent
-class RegistrationRepository {
+class TaskRepository {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Inject
-    @ConfigProperty(name = "app.registration.directory")
-    String registrationDirectory;
+    @ConfigProperty(name = "app.task.directory")
+    String taskDirectory;
 
-    List<Registration> findRegistrations(Integer skip, Integer limit) {
+    List<Task> findTasks(Integer skip, Integer limit) {
         try {
-            return Files.list(Paths.get(registrationDirectory)) //
+            return Files.list(Paths.get(taskDirectory)) //
                     .filter(path -> path.getFileName().toString().endsWith(".json")) //
                     .sorted(Comparator.comparing(Path::toString)) //
                     .skip(skip == null ? 0 : skip.intValue()) //
                     .limit(limit == null ? 100 : limit.intValue()) //
-                    .map(this::loadRegistration) //
+                    .map(this::loadTask) //
                     .toList();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    private Registration loadRegistration(Path path) {
+    private Task loadTask(Path path) {
         try (Reader reader = Files.newBufferedReader(path)) {
-            return mapper.readValue(reader, Registration.class);
+            return mapper.readValue(reader, Task.class);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    String createRegistration(Registration registration) {
-        registration.validate();
+    String createTask(Task task) {
         var now = Instant.now();
-        var id = registration.getEmail() + "@" + now.toEpochMilli();
-        registration.setId(id);
-        registration.setTimestamp(now.atOffset(ZoneOffset.UTC).toString());
-        storeRegistration(registration);
-        return id;
+        task.setNewTaskId();
+        task.setUserId("guest");
+        task.setTimestamp(now.atOffset(ZoneOffset.UTC).toString());
+        task.validate();
+        storeTask(task);
+        return task.getTaskId();
     }
 
-    private void storeRegistration(Registration registration) {
-        var path = Paths.get(registrationDirectory, registration.getId() + ".json");
+    private void storeTask(Task task) {
+        var path = Paths.get(taskDirectory, task.getTaskId() + ".json");
         try (Writer writer = Files.newBufferedWriter(path)) {
-            mapper.writeValue(writer, registration);
+            mapper.writeValue(writer, task);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    void deleteRegistration(String id) {
+    void deleteTask(String taskId) {
         try {
-            var path = Paths.get(registrationDirectory, id + ".json");
-            var pathNew = Paths.get(registrationDirectory, id + ".json.old");
+            var path = Paths.get(taskDirectory, taskId + ".json");
+            var pathNew = Paths.get(taskDirectory, taskId + ".json.old");
             Files.move(path, pathNew);
         } catch (IOException e) {
             throw new UncheckedIOException(e);

@@ -1,4 +1,4 @@
-package com.github.phoswald.minecraft.webapp.registration;
+package com.github.phoswald.sample.task;
 
 import java.io.UncheckedIOException;
 import java.util.List;
@@ -21,55 +21,54 @@ import javax.ws.rs.core.Response.Status;
 import org.jboss.logging.Logger;
 
 @RequestScoped
-@Path("/rest/registration")
-public class RegistrationResource {
+@Path("/rest/tasks")
+public class TaskResource {
 
     private final Logger logger = Logger.getLogger(getClass());
 
     @Inject
-    RegistrationRepository repository;
+    TaskRepository repository;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findRegistrations(//
+    public Response findTasks(//
             @QueryParam("skip") Integer skip, //
             @QueryParam("limit") Integer limit) {
         try {
-            var response = repository.findRegistrations(skip, limit);
-            logger.infov("Registrations found: count={0}", response.size());
-            return Response.ok(new GenericEntity<List<Registration>>(response) { }).build();
+            var response = repository.findTasks(skip, limit);
+            logger.infov("Tasks found: count={0}", Integer.valueOf(response.size()));
+            return Response.ok(new GenericEntity<List<Task>>(response) { }).build();
         } catch (UncheckedIOException e) {
-            logger.error("Registration search failed: ", e);
+            logger.error("Task search failed: ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createRegistration(Registration request) {
+    public Response createTask(Task request) {
         try {
-            var id = repository.createRegistration(request);
-            logger.infov("Registration created: email={0}, userId={1}, id={2}", request.getEmail(),
-                    request.getUserId(), id);
+            var id = repository.createTask(request);
+            logger.infov("Task created: taskId={0}, title={1}", id, request.getTitle());
             return Response.ok().build();
         } catch (IllegalArgumentException e) {
-            logger.warnv("Registration creation failed: {0}", e.toString());
+            logger.warnv("Task creation failed: {0}", e.toString());
             return Response.status(Status.BAD_REQUEST).build();
         } catch (UncheckedIOException e) {
-            logger.error("Registration creation failed: ", e);
+            logger.error("Task creation failed: ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @DELETE
-    @Path("{id}")
-    public Response deleteRegistration(@PathParam("id") String id) {
+    @Path("{taskId}")
+    public Response deleteTask(@PathParam("taskId") String taskId) {
         try {
-            repository.deleteRegistration(id);
-            logger.infov("Registration deleted: id={0}", id);
+            repository.deleteTask(taskId);
+            logger.infov("Task deleted: id={0}", taskId);
             return Response.ok().build();
         } catch (UncheckedIOException e) {
-            logger.error("Registration deletion failed: ", e);
+            logger.error("Task deletion failed: ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
