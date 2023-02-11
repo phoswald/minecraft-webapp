@@ -6,7 +6,7 @@ Experiments with jQuery and Mustache (a Poor Man's SPA)
 
 ~~~
 $ mvn clean verify
-$ export APP_TASK_DIRECTORY=$(pwd)/data
+$ export APP_TASK_DIRECTORY=./data
 $ java -jar target/quarkus-app/quarkus-run.jar
 ~~~
 
@@ -23,7 +23,7 @@ $ mvn clean verify
 $ docker build -f src/main/docker/Dockerfile -t sample-jquery-mustache-spa .
 $ docker run -it --rm --name sample-jquery-mustache-spa \
   -e APP_TASK_DIRECTORY=/data \
-  -v $(pwd)/data:/data \
+  -v ./data:/data \
   -p 8080:8080 \
   sample-jquery-mustache-spa
 ~~~
